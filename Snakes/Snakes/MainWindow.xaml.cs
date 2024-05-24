@@ -15,15 +15,34 @@ namespace Snakes
     /// Interaction logic for MainWindow.xaml
     /// </summary>
     public partial class MainWindow : Window
-    {
+    {//Creating Grids
+
+        private readonly Dictionary<GridValue, ImageSource> gridValToImage = new()
+        {
+            {GridValue.Empty, Images.Empty },
+            {GridValue.Snake, Images.Body },
+            {GridValue.Food, Images.Food }
+        };
 
         //Adding images
         private readonly int rows = 15, col = 15;
         private readonly Image[,] gridImages;
+        private GameState gameState;
         public MainWindow()
         {
             InitializeComponent();
             gridImages = SetUpGrid();
+            gameState = new GameState(rows, col);
+        }
+
+        private void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+            DrawGrid();
+        }
+
+        private void Window_KeyDown(object sender, KeyEventArgs e)
+        {
+
         }
 
         private Image[,] SetUpGrid()
@@ -47,6 +66,18 @@ namespace Snakes
             }
 
             return images;
+        }
+
+        private void DrawGrid()
+        {
+            for (int r = 0; r < rows; r++)
+            {
+                for(int c = 0;c < col; c++)
+                {
+                    GridValue gridVal = gameState.Grid[r,c];
+                    gridImages[r, c].Source = gridValToImage[gridVal];
+                }
+            }
         }
     }
 }
